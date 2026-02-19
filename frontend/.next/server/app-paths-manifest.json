@@ -1,0 +1,5 @@
+{
+  "/vinculos/page": "app/vinculos/page.js",
+  "/executar/page": "app/executar/page.js",
+  "/mappings/page": "app/mappings/page.js"
+}
