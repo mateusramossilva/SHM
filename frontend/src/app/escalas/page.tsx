@@ -1,16 +1,20 @@
 'use client'
 import { useState, useEffect } from 'react'
 
+// Puxa a URL do Railway definida no Netlify ou usa localhost para desenvolvimento
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
 export default function MapeamentoPage() {
-    const [escalas, setEscalas] = useState([])
+    // CORREÇÃO: Definimos explicitamente como <any[]> para o build passar
+    const [escalas, setEscalas] = useState<any[]>([])
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [newEmpresa, setNewEmpresa] = useState('')
     const [loading, setLoading] = useState(false)
 
-    // 1. Busca os dados do seu Backend
+    // 1. Busca os dados do seu Backend na Nuvem
     const fetchData = async () => {
         try {
-            const res = await fetch('http://localhost:3002/automation/escalas')
+            const res = await fetch(`${API_URL}/automation/escalas`)
             const data = await res.json()
             if (Array.isArray(data)) setEscalas(data)
         } catch (err) {
@@ -20,17 +24,17 @@ export default function MapeamentoPage() {
 
     useEffect(() => { fetchData() }, [])
 
-    // 2. Função que substitui a "barrinha de localhost" por um Modal de Backoffice
+    // 2. Função de Cadastro
     const handleCreateEmpresa = async () => {
         if (!newEmpresa) return alert("Digite o nome da empresa")
         setLoading(true)
         try {
-            const res = await fetch('http://localhost:3002/automation/escalas', {
+            const res = await fetch(`${API_URL}/automation/escalas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     empresa: newEmpresa,
-                    origem: "", // Criamos vazio para editar depois
+                    origem: "",
                     destino: ""
                 })
             })
@@ -104,7 +108,7 @@ export default function MapeamentoPage() {
                 </table>
             </div>
 
-            {/* MODAL DE CADASTRO (O FORMULÁRIO DE BACKOFFICE) */}
+            {/* MODAL DE CADASTRO */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-[#1e293b]/80 backdrop-blur-md flex items-center justify-center z-50 p-6">
                     <div className="bg-white w-full max-w-md rounded-[3rem] shadow-2xl p-10 animate-in fade-in zoom-in duration-200">
