@@ -1,4 +1,4 @@
-// File: D:\Aleevia\HSM\hsm-backoffice\frontend\src\app\vinculos\page.tsx
+// File: /Users/diegosimas/Downloads/frontend/src/app/vinculos/page.tsx
 import * as entry from '../../../../src/app/vinculos/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

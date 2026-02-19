@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
 export default function VinculosPage() {
     // ESTADOS
     const [vinculos, setVinculos] = useState<any[]>([])
@@ -15,7 +17,7 @@ export default function VinculosPage() {
     useEffect(() => { carregar() }, [])
 
     const carregar = async () => {
-        const res = await axios.get('http://localhost:3002/automation/vinculos')
+        const res = await axios.get(`${API_URL}/automation/vinculos`)
         setVinculos(res.data)
     }
 
@@ -24,26 +26,26 @@ export default function VinculosPage() {
     const criarNovo = async () => {
         if (!novoVinculo.sigla || !novoVinculo.nome) return alert("Preencha a Sigla e o Nome")
 
-        await axios.post('http://localhost:3002/automation/vinculos', novoVinculo)
+        await axios.post(`${API_URL}/automation/vinculos`, novoVinculo)
 
         setNovoVinculo({ sigla: '', nome: '' }) // Limpa inputs
         carregar() // Atualiza tabela
     }
 
     const salvarEdicao = async () => {
-        await axios.patch(`http://localhost:3002/automation/update/vinculo/${editingId}`, editData)
+        await axios.patch(`${API_URL}/automation/update/vinculo/${editingId}`, editData)
         setEditingId(null)
         carregar()
     }
 
     const toggleStatus = async (item: any) => {
-        await axios.patch(`http://localhost:3002/automation/toggle/vinculo/${item.id}`, { ativa: !item.ativa })
+        await axios.patch(`${API_URL}/automation/toggle/vinculo/${item.id}`, { ativa: !item.ativa })
         carregar()
     }
 
     const deletar = async (id: string) => {
         if (confirm("Excluir este vínculo permanentemente?")) {
-            await axios.delete(`http://localhost:3002/automation/vinculos/${id}`)
+            await axios.delete(`${API_URL}/automation/vinculos/${id}`)
             carregar()
         }
     }

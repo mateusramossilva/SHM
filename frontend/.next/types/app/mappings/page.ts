@@ -1,4 +1,4 @@
-// File: D:\Aleevia\HSM\hsm-backoffice\frontend\src\app\mappings\page.tsx
+// File: /Users/diegosimas/Downloads/frontend/src/app/mappings/page.tsx
 import * as entry from '../../../../src/app/mappings/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

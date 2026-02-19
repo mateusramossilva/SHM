@@ -14,8 +14,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         const load = async () => {
-            // Usamos localhost como padrão para evitar o erro de fetch no Next.js 15
-            const baseUrl = 'http://localhost:3000';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
             try {
                 const resComp = await fetch(`${baseUrl}/companies`);
                 if (!resComp.ok) throw new Error();

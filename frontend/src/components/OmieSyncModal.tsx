@@ -3,6 +3,8 @@ import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
 interface Props {
     isOpen: boolean;
     onClose: () => void;
@@ -23,7 +25,7 @@ export default function OmieSyncModal({ isOpen, onClose, dadosContas }: Props) {
         setEtapa('RUN');
         try {
             // 1. Prepara os dados usando o seu Controller (Separa Prontos de Ignorados)
-            const prep = await axios.post('http://localhost:3002/automation/preparar-dados', { contas: dadosContas });
+            const prep = await axios.post(`${API_URL}/automation/preparar-dados`, { contas: dadosContas });
             const listaParaEnviar = prep.data.prontos;
             setNaoCadastrados(prep.data.ignorados); // Aqui entram os CPFs que não existem na Omie
 
@@ -33,7 +35,7 @@ export default function OmieSyncModal({ isOpen, onClose, dadosContas }: Props) {
                 if (i > 0) await new Promise(r => setTimeout(r, 1200));
 
                 try {
-                    const res = await axios.post('http://localhost:3002/automation/incluir-individual', item);
+                    const res = await axios.post(`${API_URL}/automation/incluir-individual`, item);
                     setLogs(prev => [...prev, { ...item, status: 'sucesso', idOmie: res.data.codigo_lancamento_omie }]);
                 } catch (err: any) {
                     const msg = err.response?.data?.message || err.message;

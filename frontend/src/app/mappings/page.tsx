@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
 export default function MapeamentoPage() {
     const [companies, setCompanies] = useState<any[]>([])
     const [escalas, setEscalas] = useState<any[]>([])
@@ -31,19 +33,19 @@ export default function MapeamentoPage() {
     }, [selectedEmpresa])
 
     const carregarEmpresas = async () => {
-        const res = await axios.get('http://localhost:3002/automation/companies')
+        const res = await axios.get(`${API_URL}/automation/companies`)
         // O backend agora retorna [{name: 'SHM'}, {name: 'VITALLIS'}]
         setCompanies(res.data)
     }
 
     const carregarEscalas = async () => {
-        const res = await axios.get(`http://localhost:3002/automation/escalas?empresa=${selectedEmpresa}`)
+        const res = await axios.get(`${API_URL}/automation/escalas?empresa=${selectedEmpresa}`)
         setEscalas(res.data)
     }
 
     const addCompany = async () => {
         if (!newComp) return
-        await axios.post('http://localhost:3002/automation/companies', { name: newComp.toUpperCase() })
+        await axios.post(`${API_URL}/automation/companies`, { name: newComp.toUpperCase() })
         setNewComp('')
         await carregarEmpresas()
         setSelectedEmpresa(newComp.toUpperCase()) // Pula para a nova aba
@@ -51,7 +53,7 @@ export default function MapeamentoPage() {
 
     const deleteCompany = async (nome: string) => {
         if (confirm(`Remover a aba ${nome}? (As regras não serão apagadas, apenas ocultas)`)) {
-            await axios.delete(`http://localhost:3002/automation/companies/${nome}`)
+            await axios.delete(`${API_URL}/automation/companies/${nome}`)
             setSelectedEmpresa(null)
             await carregarEmpresas()
         }
@@ -59,7 +61,7 @@ export default function MapeamentoPage() {
 
     const criarRegra = async () => {
         if (!newRegra.origem || !newRegra.destino) return alert("Preencha origem e destino")
-        await axios.post('http://localhost:3002/automation/escalas', {
+        await axios.post(`${API_URL}/automation/escalas`, {
             ...newRegra,
             empresa: selectedEmpresa
         })
@@ -68,19 +70,19 @@ export default function MapeamentoPage() {
     }
 
     const salvarEdicao = async () => {
-        await axios.patch(`http://localhost:3002/automation/update/escala/${editingId}`, editData)
+        await axios.patch(`${API_URL}/automation/update/escala/${editingId}`, editData)
         setEditingId(null)
         carregarEscalas()
     }
 
     const toggleStatus = async (item: any) => {
-        await axios.patch(`http://localhost:3002/automation/toggle/escala/${item.id}`, { ativa: !item.ativa })
+        await axios.patch(`${API_URL}/automation/toggle/escala/${item.id}`, { ativa: !item.ativa })
         carregarEscalas()
     }
 
     const deleteEscala = async (id: string) => {
         if (confirm("Excluir esta escala permanentemente?")) {
-            await axios.delete(`http://localhost:3002/automation/escalas/${id}`)
+            await axios.delete(`${API_URL}/automation/escalas/${id}`)
             carregarEscalas()
         }
     }
